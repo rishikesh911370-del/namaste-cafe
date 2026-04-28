@@ -6,16 +6,6 @@ const Navbar = ({ cart }) => {
 
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
 
-  // ✅ SCROLL FUNCTION
-  const scrollToAbout = () => {
-    const section = document.getElementById("about-section");
-
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    } else {
-      console.log("About section not found");
-    }
-  };
 
   return (
     <div className="navbar">
@@ -30,7 +20,6 @@ const Navbar = ({ cart }) => {
 >
   About Us
 </span>
-
 
         <button onClick={() => navigate("/cart")}>
           Cart 🛒 {totalItems > 0 && `(${totalItems})`}

@@ -24,7 +24,7 @@ useEffect(() => {
   if (!isAuth) {
     navigate("/admin-login");
   }
-}, []);
+}, [navigate]);
 
 useEffect(() => {
   fetch("http://localhost:5000/order-status")
