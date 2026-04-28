@@ -5,7 +5,6 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
 
   // ===== STATE =====
   const [step, setStep] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [coords, setCoords] = useState(null);
   const [qrCode, setQrCode] = useState("");
   const [showPaidButton, setShowPaidButton] = useState(false);
@@ -187,7 +186,7 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
 
   useEffect(() => {
     if (step === "upiQR") generateQR();
-  }, [step]);
+  }, [step, generateQR]);
 
   useEffect(() => {
     const onFocus = () => setShowPaidButton(true);
