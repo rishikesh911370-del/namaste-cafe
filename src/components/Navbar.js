@@ -14,9 +14,12 @@ const Navbar = ({ cart }) => {
       <div className="navbar-right">
       <span
   className="nav-link"
-  onClick={() =>
-    navigate("/", { state: { scrollTo: "about" } })
-  }
+  onClick={() => {
+    const section = document.getElementById("about-section");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  }}
 >
   About Us
 </span>
