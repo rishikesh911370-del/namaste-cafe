@@ -10,6 +10,7 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
   const [showPaidButton, setShowPaidButton] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [orderEnabled, setOrderEnabled] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -60,7 +61,7 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
 
   // ===== FETCH ORDER STATUS =====
   useEffect(() => {
-    fetch("https://your-backend-url.vercel.app/order-status")
+    fetch("https://namaste-cafe-backend.vercel.app/order-status")
       .then(res => res.json())
       .then(data => setOrderEnabled(data.enabled))
       .catch(() => setOrderEnabled(true));
@@ -71,32 +72,36 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
     setStep("loading");
     setLoading(true);
 
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
+    navigator.geolocation.getCurrentPosition((pos) => {
+  const lat = pos.coords.latitude;
+  const lng = pos.coords.longitude;
 
-      setCoords({ lat, lng });
+  setCoords({ lat, lng });
 
-      try {
-        const res = await fetch(
-          `https://your-backend-url.vercel.app/route?origin=${lat},${lng}&destination=25.2425,86.9842`
-        );
+  (async () => {
+    try {
+      const res = await fetch(
+  `https://namaste-cafe-backend.vercel.app/route?origin=${lat},${lng}&destination=25.2425,86.9842`
+);
 
-        const data = await res.json();
-        const dist = parseFloat(data.distance);
 
-        setTimeout(() => {
-          setLoading(false);
-          if (dist <= 4) setStep("success");
-          else setStep("not-serviceable");
-        }, 1000);
+      const data = await res.json();
+      const dist = parseFloat(data.distance);
 
-      } catch {
-        alert("Error checking location ❌");
-        setStep(null);
-      }
-    });
-  };
+      setTimeout(() => {
+        setLoading(false);
+        if (dist <= 4) setStep("success");
+        else setStep("not-serviceable");
+      }, 1000);
+
+    } catch {
+      alert("Error checking location ❌");
+      setStep(null);
+    }
+  })();
+});
+};
+
 
   // ===== MESSAGE BUILDER =====
   const buildMessage = (orderId) => {
@@ -140,7 +145,7 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
     };
 
     try {
-      const res = await fetch("https://your-backend-url.vercel.app/orders", {
+      const res = await fetch("https://namaste-cafe-backend.vercel.app/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderData)
@@ -186,7 +191,7 @@ const CheckoutFlow = ({ cart, setOrders, setCart }) => {
 
   useEffect(() => {
     if (step === "upiQR") generateQR();
-  }, [step, generateQR]);
+  }, [step]);
 
   useEffect(() => {
     const onFocus = () => setShowPaidButton(true);
